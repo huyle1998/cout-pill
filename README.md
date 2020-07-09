@@ -41,9 +41,46 @@ BW = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
 
 Now we have a binary image, this is an important matrix for further processing steps.
 
-<img src="images/BINARY.png" width="300">
+<img src="images/BINARY.png" width="200">
 
 ### Watershed Transform
+
+Watershed transformation is a computer analysis of objects in digital image which helps to define objects in a picture. Computer analysis of objects starts by finding which pixel belongs to the object. This is called image segmentation, the process of separating objects from the background as well as from each other.
+
+From the binary image, we will convert it into “distance transformation of binary image” by using another image processing called “Distance transform” to compute the distance from every pixel in the region of objects to the nearest zero-valued pixel. The farther the distance is, which means the closer the pixel is to the center of the object, the darker it will be and vice versa.
+
+Any “distance transformation of binary image” can be considered as a terrain surface. Dark areas with homogeneous grey level are considered low areas (catchment basins) and bright areas are considered high areas (watershed lines). If we flood this surface from its minima and, if we prevent the merging of the waters coming from different sources, we can divide the image into two different sets: the catchment basins and the watershed lines which are the objects that we need to define and their boundaries.
+
+This algorithm is a great tool to count pills that have multitudinous shapes. We process on similar regions that have approximately the same area without bothering their shape. It helps to overcome the limitations of "Hough Transform" which counts pills by detecting objects described with its model which is similar to the shape simulated earlier, and so it can only handle analytically defined shapes such as circle or ellipse.
+
+Nevertheless, there is a common circumstance in watershed segmentation which is called oversegmentation. Generally, there are some noise spots in  “distance transformation'' image because of the uneven distribution of light on the surface of the object due to smoothness or the structure of its surface. Besides, this phenomenon is immensely common at the asymmetrical object since the distance between the boundary pixels and the center pixels are quite different, leading to the dark area (low area) in “distance transformation'' image not gathering in the middle of objects. As result,  there are more than one local minimum in the object's region. Each local minimum, even if it is inconsiderable, forms a catchment basin and then a watershed region around them. Subsequently, there are a host of watershed regions in a object's region.
+
+
+<img src="images/NOTWATER.png" width="200">
+
+One solution here is modifying the image to filter out tiny local minima or remove minima that are too shallow. This is called "minima imposition" and the result:
+
+```python
+def seg_watershed(BW, gray):
+    # Watershed Transform
+    D = ndimage.distance_transform_edt(BW)
+    ret, mask = cv2.threshold(D, 0.4 * D.max(), 255, 0)
+    mask = np.uint8(mask)
+
+    # Marker labeling Watershed Line ==> line
+    ret, markers = cv2.connectedComponents(mask)
+    labels = watershed(-D, markers, mask=gray, watershed_line=True)
+    line = np.zeros(BW.shape, dtype=np.uint8)
+    line[labels == 0] = 255
+    line = cv2.dilate(line, np.ones((2, 2), np.uint8), iterations=1)
+
+    # Creating BW2
+    BW2 = BW.copy()
+    BW2[line == 255] = 0
+    return BW2
+```
+
+<img src="images/WATER.png" width="200">
 
 ### Processing area
 
