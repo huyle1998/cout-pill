@@ -41,7 +41,7 @@ BW = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
 
 Now we have a binary image, this is an important matrix for further processing steps.
 
-<img src="images/BINARY.png" width="200">
+<p align="center"> <img src="images/BINARY.png" width="250"> </p>
 
 ### Watershed Transform
 
@@ -56,7 +56,7 @@ This algorithm is a great tool to count pills that have multitudinous shapes. We
 Nevertheless, there is a common circumstance in watershed segmentation which is called oversegmentation. Generally, there are some noise spots in  “distance transformation'' image because of the uneven distribution of light on the surface of the object due to smoothness or the structure of its surface. Besides, this phenomenon is immensely common at the asymmetrical object since the distance between the boundary pixels and the center pixels are quite different, leading to the dark area (low area) in “distance transformation'' image not gathering in the middle of objects. As result,  there are more than one local minimum in the object's region. Each local minimum, even if it is inconsiderable, forms a catchment basin and then a watershed region around them. Subsequently, there are a host of watershed regions in a object's region.
 
 
-<img src="images/NOTWATER.png" width="200">
+<p align="center"> <img src="images/NOTWATER.png" width="250"> </p>
 
 One solution here is modifying the image to filter out tiny local minima or remove minima that are too shallow. This is called "minima imposition" and the result:
 
@@ -80,7 +80,7 @@ def seg_watershed(BW, gray):
     return BW2
 ```
 
-<img src="images/WATER.png" width="200">
+<p align="center"> <img src="images/WATER.png" width="250"> </p>
 
 ### Processing area
 
