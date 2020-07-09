@@ -26,8 +26,7 @@ First of all, we will convert color image into grey image. The primary color com
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 ```
 
-<img src="images/RGB.png" width="200"> 
-<img src="images/GRAY.png" width="200">
+<img src="images/RGB.png" width="200"> <img src="images/GRAY.png" width="200">
 
 Now we will only work with 1 matrix (a x b). Things have become simpler but it isn’t the result we expect yet. From the grey image above, we will convert it to binary image with a threshold given by Otsu's threshold method.
 Otsu's threshold method is an adaptive way for binarization algorithms in image processing. Firstly, the statistical data of an image is used to build a histogram to describe the distribution of grey scale in pixels as in.
