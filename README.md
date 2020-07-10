@@ -84,8 +84,56 @@ def seg_watershed(BW, gray):
 
 ### Processing area
 
-### Calculate the number of pill
+After the Watershed step, sometimes, the objects still have a few parts that are not fully divided and still "stick together". So we need to do one more step so we can count exactly how many pills are displayed on the screen.
+
+First of all, we will extract the area value of the regions identified as pills. And then, we selected a unit area value as standard. Because the pills are located in different locations around the camera with different angles, the regions will have different area values despite the fact that they are pills of the same medicine. Therefore, to minimize the error of division in the following part of the process, the average area value of regions that considered as a pill will be chosen as the unit area. After that, the area of each object will be divided by unit area, then rounded to the nearest integer. If the difference between the two values, before and after being rounded, is less than a nominal value, then receive that integer. Otherwise we will show a "Warning" text box to warn users to adjust the positions of pills as well as to check whether there are some pills of other medicine mixed in there. Finally, we add those integers together to get the number of pills.
+
+```python
+def caculate_pill(BW2):
+    label_image = label(BW2)
+    A = [r.area for r in regionprops(label_image)]
+    A.sort()
+
+    num = 0
+    S = 0
+    num_pill = 0
+    warn = False
+    # Find minArea
+    for i in range(len(A)):
+        rateArea = A[i] / A[0]
+        if rateArea < 1.15:
+            num = num + 1
+            S = S + A[i]
+    if num != 0:
+        minArea = S / num
+
+    # Calculate num_pill
+    for i in range(len(A)):
+        rate = A[i] / minArea
+        appro_rate = round(rate, 0)
+        delta_rate = abs(rate - appro_rate)
+
+        if delta_rate < 0.3:
+            num_pill = num_pill + appro_rate
+        else:
+            warn = True
+
+    if num_pill == 0:
+        warn = True
+    return num_pill, warn
+```
+
+## Result
+
+<p align="center"> <img src="images/RESULT.png" width=""> </p>
 
 ## Installation
 
+```python
+pip install -r requirements.txt
+```
+
 ## Usage
+* Direct to the location of project.
+* Open ```Command Promt```
+* Type ```python main.py```
