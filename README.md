@@ -1,3 +1,5 @@
+https://www.codecogs.com/latex/eqneditor.php
+
 # Real-time Pill Counting using Computer Vision
 
 Pill counting is one of indispensable steps of distributing medicine in medical facilities. Generally, pills are counted manually and this counting method takes a lot of time for pharmacists and patients. These systems provide contactless control which eliminates the influence of human factors, reduces errors. As a result, the measurement will give faster results with higher accuracy. In this project, we propose a real-time computer vision program in order to count the number of pills via video captured by a removable camera connected to the computer. Our program is based on Otsu's threshold method and the image segmentation of Watershed transformation which can count pills without considering other factors such as shape and size. <p
@@ -21,6 +23,9 @@ In this program, we will work with digital images. The captured image of the cam
 First of all, we will convert color image into grey image. The primary color components used in the video and television industries incorporate a correction to compensate for the nonlinearity of the video monitors. According to ITU-R BT.601 standard, the average luminance of the reconstruction color space of a television monitor is computed:
 
 ***Y = 0.299R + 0.587G + 0.114B***
+
+<!-- <img src="https://latex.codecogs.com/gif.latex?x=\frac{-b&plus;\sqrt{b^{2}-4ac}}{2a}" title="x=\frac{-b+\sqrt{b^{2}-4ac}}{2a}" /> -->
+
 
 ```python
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
