@@ -79,13 +79,13 @@ def main():
         cv2.putText(img, 'Result: ' + str(int(num_pill)), (5, 30), 4, 1, (0, 255, 255), 1)
         if warn:
             cv2.putText(img, 'Warning', (10, 450), 4, 1, (0, 255, 255), 1)
-
+        fps = round((1 / (time.time() - t)), 2)
+        cv2.putText(img, 'Fps: ' + str(int(fps)), (500, 30), 4, 1, (0, 255, 255), 1)
         # Display the resulting frame
         cv2.imshow('Counting Pill', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-        print("fps = ", round((1 / (time.time() - t)), 2))
     # When everything done, release the capture
     mycam.release()
     cv2.destroyAllWindows()
