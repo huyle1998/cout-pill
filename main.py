@@ -71,21 +71,17 @@ def main():
         # noise removal
         kernel = np.ones((3, 3), np.uint8)
         BW = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
-
         BW2 = seg_watershed(BW, gray)
         num_pill, warn = caculate_pill(BW2)
-
-        # img[0:40,0:250] = (0,0,0)	# Consider to Delete
-        cv2.putText(img, 'Result: ' + str(int(num_pill)), (5, 30), 4, 1, (0, 255, 255), 1)
         if warn:
             cv2.putText(img, 'Warning', (10, 450), 4, 1, (0, 255, 255), 1)
+            num_pill = 0
+        cv2.putText(img, 'Result: ' + str(int(num_pill)), (5, 30), 4, 1, (0, 255, 255), 1)
         fps = round((1 / (time.time() - t)), 2)
         cv2.putText(img, 'Fps: ' + str(int(fps)), (500, 30), 4, 1, (0, 255, 255), 1)
-        # Display the resulting frame
         cv2.imshow('Counting Pill', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
     # When everything done, release the capture
     mycam.release()
     cv2.destroyAllWindows()
